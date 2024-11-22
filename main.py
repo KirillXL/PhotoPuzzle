@@ -1,0 +1,44 @@
+import pygame as pg
+import numpy as np
+from numba import njit
+import pygame.gfxdraw
+import cv2
+
+class ArtConverter:
+    def __init__ (self, path='photo/nya.png'):
+        pg.init()
+        self.path = path
+        self.image = self.get_image()
+        self.RES = self.WIDTH, self.HEIGHT = self.image.shape[0], self.image.shape[1]
+        self.surface = pg.display.set_mode(self.RES)
+        self.clock = pg.time.Clock()
+        pass
+
+    def get_image(self):
+        self.cv2_image = cv2.imread(self.path)
+        transposed_image = cv2.transpose(self.cv2_image)
+        rgb_image = cv2.cvtColor(transposed_image, cv2.COLOR_RGB2BGR)
+        return rgb_image
+
+    def draw_cv2_image(self):
+        resized_cv2_image = cv2.resize(self.cv2_image, (640, 360), interpolation=cv2.INTER_AREA)
+        cv2.imshow('photo', resized_cv2_image)
+
+    def draw(self):
+        pg.surfarray.blit_array(self.surface, self.image)
+        self.draw_cv2_image()
+
+    def run(self):
+        while True:
+            for i in pg.event.get():
+                if i.type == pg.QUIT:
+                    exit()
+            self.draw()
+            pg.display.set_caption(str(self.clock.get_fps()))
+            pg.display.flip()
+            self.clock.tick()
+        pass
+
+if __name__ == '__main__':
+    app = ArtConverter()
+    app.run()
