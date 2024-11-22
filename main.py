@@ -41,4 +41,5 @@ class ArtConverter:
 
 if __name__ == '__main__':
     app = ArtConverter()
+
     app.run()
