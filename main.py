@@ -5,7 +5,7 @@ import pygame.gfxdraw
 import cv2
 
 class ArtConverter:
-    def __init__ (self, path='photo/nya.png'):
+    def __init__ (self, path='photo/nya.jpg'):
         pg.init()
         self.path = path
         self.image = self.get_image()
