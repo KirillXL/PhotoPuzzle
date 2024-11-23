@@ -60,14 +60,14 @@ def select_image(image_folder="images", window_size=(800, 600)):
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # ЛКМ
                 mouse_x, mouse_y = event.pos
                 for i, img_path in enumerate(images):
-                    rect = pygame.Rect(50, 50 + i * 110, 700, 100)
+                    rect = pygame.Rect(50, 50 + i * 50, 700, 50)
                     if rect.collidepoint(mouse_x, mouse_y):
                         selected_image = img_path
                         running = False
 
         # Отображение списка изображений
         for i, img_path in enumerate(images):
-            rect = pygame.Rect(50, 50 + i * 110, 700, 100)
+            rect = pygame.Rect(50, 50 + i * 50, 700, 50)
             pygame.draw.rect(screen, GRAY, rect)
             pygame.draw.rect(screen, BLACK, rect, 2)
             render_text(os.path.basename(img_path), rect.centerx, rect.centery)

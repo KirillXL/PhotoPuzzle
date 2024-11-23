@@ -11,5 +11,5 @@ if __name__ == '__main__':
     else:
         print("Выбор отменён или изображение не выбрано.")
 
-    app = ArtConverterASCII()
+    app = ArtConverterASCII(selected_path)
     app.run()
