@@ -1,4 +1,4 @@
-from ascii import ArtConverterASCII
+from ascii import ArtASCIIColor
 from interface import select_image
 
 
@@ -11,5 +11,5 @@ if __name__ == '__main__':
     else:
         print("Выбор отменён или изображение не выбрано.")
 
-    app = ArtConverterASCII(selected_path)
+    app = ArtASCIIColor(selected_path)
     app.run()
