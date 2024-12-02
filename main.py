@@ -1,5 +1,5 @@
 from ascii import ArtASCIIColor
-from pixel import ArtPixelColor
+from pixel import ArtPixel
 from interface import select_image
 
 
@@ -12,5 +12,5 @@ if __name__ == '__main__':
     else:
         print("Выбор отменён или изображение не выбрано.")
 
-    app = ArtPixelColor(selected_path)
+    app = ArtPixel(selected_path)
     app.run()

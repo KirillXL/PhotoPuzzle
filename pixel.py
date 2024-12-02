@@ -69,3 +69,57 @@ class ArtPixelColor:
             pg.display.set_caption(str(self.clock.get_fps()))
             pg.display.flip()
             self.clock.tick()
+
+class ArtPixel:
+    def __init__(self, path='photo/nya.png', pixel_size=7, screen_res=(800, 600)):
+        pg.init()
+        self.path = path
+        self.PIXEL_SIZE = pixel_size
+        self.screen_res = screen_res
+        self.image = self.get_image()
+        self.image = cv2.resize(self.image, self.screen_res, interpolation=cv2.INTER_AREA)
+
+        self.RES = self.WIDTH, self.HEIGHT = self.screen_res
+        self.surface = pg.display.set_mode(self.RES)
+        self.clock = pg.time.Clock()
+
+    def apply_gray_filter(self):
+        """Применяет серый фильтр к изображению."""
+        gray_image = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
+        # Конвертируем изображение обратно в 3 канала для рисования.
+        gray_image_rgb = cv2.merge([gray_image] * 3)
+        return gray_image_rgb
+
+    def draw_converted_image(self):
+        """Рисует изображение с наложенным серым фильтром."""
+        gray_image = self.apply_gray_filter()
+        for x in range(0, self.WIDTH, self.PIXEL_SIZE):
+            for y in range(0, self.HEIGHT, self.PIXEL_SIZE):
+                # Берём цвет пикселя.
+                r, g, b = gray_image[y, x]
+                pygame.gfxdraw.box(self.surface, (y, x, self.PIXEL_SIZE, self.PIXEL_SIZE), (r, g, b))
+
+    def get_image(self):
+        self.cv2_image = cv2.imread(self.path)
+        transposed_image = cv2.transpose(self.cv2_image)
+        image = cv2.cvtColor(transposed_image, cv2.COLOR_BGR2RGB)
+        return image
+
+    def draw_cv2_image(self):
+        resized_cv2_image = cv2.resize(self.cv2_image, self.screen_res, interpolation=cv2.INTER_AREA)
+        cv2.imshow('photo', resized_cv2_image)
+
+    def draw(self):
+        self.surface.fill('black')
+        self.draw_converted_image()
+        self.draw_cv2_image()
+
+    def run(self):
+        while True:
+            for i in pg.event.get():
+                if i.type == pg.QUIT:
+                    exit()
+            self.draw()
+            pg.display.set_caption(str(self.clock.get_fps()))
+            pg.display.flip()
+            self.clock.tick()
