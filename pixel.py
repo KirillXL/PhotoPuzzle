@@ -20,7 +20,6 @@ class ArtPixel:
 
     def get_image(self):
         self.cv2_image = cv2.imread(self.path)
-
         image = cv2.cvtColor(self.cv2_image, cv2.COLOR_BGR2RGB)
         return image
 
@@ -71,7 +70,6 @@ class ArtPixelColor(ArtPixel):
                     color = self.PALETTE[color_key]
                     pygame.gfxdraw.box(self.surface, (x, y, self.PIXEL_SIZE, self.PIXEL_SIZE), color)
         self.draw_cv2_image()
-
 
 
 class ArtPixelGray(ArtPixel):
