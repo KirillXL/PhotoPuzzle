@@ -20,8 +20,8 @@ class ArtPixel:
 
     def get_image(self):
         self.cv2_image = cv2.imread(self.path)
-        transposed_image = cv2.transpose(self.cv2_image)
-        image = cv2.cvtColor(transposed_image, cv2.COLOR_BGR2RGB)
+
+        image = cv2.cvtColor(self.cv2_image, cv2.COLOR_BGR2RGB)
         return image
 
     def draw_cv2_image(self):
@@ -69,7 +69,7 @@ class ArtPixelColor(ArtPixel):
                 color_key = tuple(color_indices[y,x])
                 if sum(color_key):
                     color = self.PALETTE[color_key]
-                    pygame.gfxdraw.box(self.surface, (y, x, self.PIXEL_SIZE, self.PIXEL_SIZE), color)
+                    pygame.gfxdraw.box(self.surface, (x, y, self.PIXEL_SIZE, self.PIXEL_SIZE), color)
         self.draw_cv2_image()
 
 
@@ -94,5 +94,5 @@ class ArtPixelGray(ArtPixel):
             for y in range(0, self.HEIGHT, self.PIXEL_SIZE):
                 # Берём цвет пикселя.
                 r, g, b = gray_image[y, x]
-                pygame.gfxdraw.box(self.surface, (y, x, self.PIXEL_SIZE, self.PIXEL_SIZE), (r, g, b))
+                pygame.gfxdraw.box(self.surface, (x, y, self.PIXEL_SIZE, self.PIXEL_SIZE), (r, g, b))
         self.draw_cv2_image()
