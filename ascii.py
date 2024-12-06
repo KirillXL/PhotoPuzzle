@@ -48,12 +48,13 @@ class ArtASCII:
         self.draw_cv2_image()
 
     def run(self):
-        while True:
+        running = True
+        while running:
             for i in pg.event.get():
                 if i.type == pg.QUIT:
-                    exit()
+                    running = False
             self.draw()
-            pg.display.set_caption(str(self.clock.get_fps()))
+            pg.display.set_caption("Обработанное изображение")
             pg.display.flip()
             self.clock.tick()
 
@@ -119,11 +120,12 @@ class ArtASCIIColor:
         self.draw_cv2_image()
 
     def run(self):
-        while True:
+        running = True
+        while running:
             for i in pg.event.get():
                 if i.type == pg.QUIT:
-                    exit()
+                    running = False
             self.draw()
-            pg.display.set_caption(str(self.clock.get_fps()))
+            pg.display.set_caption("Обработанное изображение")
             pg.display.flip()
             self.clock.tick()

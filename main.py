@@ -1,16 +1,32 @@
 from ascii import ArtASCIIColor, ArtASCII
 from pixel import ArtPixelGray, ArtPixelColor
-from interface import select_image
+from interface import PickPicture, PickArt
 
 
 if __name__ == '__main__':
 
-    selected_path = select_image(image_folder="photo")
+    while True:
+        picture = PickPicture("photo")
+        selected_path = picture.select_event()
+        art = PickArt()
+        select_art = art.select_event()
 
-    if selected_path:
-        print(f"Вы выбрали: {selected_path}")
-    else:
-        print("Выбор отменён или изображение не выбрано.")
+        if selected_path:
+            print(f"Вы выбрали: {selected_path}")
+        else:
+            print("Выбор отменён или изображение не выбрано.")\
 
-    app = ArtPixelGray(selected_path)
-    app.run()
+        match select_art:
+            case 'ASCII':
+                app = ArtASCII(selected_path)
+                app.run()
+            case 'ASCII Color':
+                app = ArtASCIIColor(selected_path)
+                app.run()
+            case 'PIXEL':
+                app = ArtPixelGray(selected_path)
+                app.run()
+            case 'PIXEL Color':
+                app = ArtPixelColor(selected_path)
+                app.run()
+
