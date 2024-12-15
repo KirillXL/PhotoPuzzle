@@ -1,4 +1,4 @@
-from ascii import ArtASCIIColor, ArtASCII
+from ascii import ArtASCIIGray, ArtASCIIColor
 from pixel import ArtPixelGray, ArtPixelColor
 from interface import PickPicture, PickArt
 
@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
         match select_art:
             case 'ASCII':
-                app = ArtASCII(selected_path)
+                app = ArtASCIIGray(selected_path)
                 app.run()
             case 'ASCII Color':
                 app = ArtASCIIColor(selected_path)
