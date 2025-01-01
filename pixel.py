@@ -5,7 +5,7 @@ import cv2
 
 
 class ArtPixel:
-    def __init__(self, path = 'photo/nya.png', pixel_size=7, screen_res=(800,600)):
+    def __init__(self, path = 'photo/nya.png', pixel_size=5, screen_res=(800,600)):
         pg.init()
         self.path = path
         self.screen_res = screen_res
@@ -45,7 +45,7 @@ class ArtPixel:
 
 
 class ArtPixelColor(ArtPixel):
-    def __init__(self, path='photo/nya.png', pixel_size=7,color_lvl=8, screen_res=(800, 600)):
+    def __init__(self, path='photo/nya.png', pixel_size=5,color_lvl=8, screen_res=(800, 600)):
         super().__init__(path,pixel_size,screen_res) #Вызов конструктора базового класса
 
         self.COLOR_LVL = color_lvl
@@ -75,7 +75,7 @@ class ArtPixelColor(ArtPixel):
 
 class ArtPixelGray(ArtPixel):
 
-    def __init__(self, path='photo/nya.png', pixel_size=7, screen_res=(800, 600)):
+    def __init__(self, path='photo/nya.png', pixel_size=5, screen_res=(800, 600)):
         super().__init__(path, pixel_size, screen_res)  # Вызов конструктора базового класса
 
     def apply_gray_filter(self):

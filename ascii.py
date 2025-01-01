@@ -42,7 +42,7 @@ class ArtASCII:
             self.clock.tick()
 
 class ArtASCIIGray(ArtASCII):
-    def __init__(self, path='photo/nya.jpg', font_size=7, screen_res=(800, 600)):
+    def __init__(self, path='photo/nya.jpg', font_size=10, screen_res=(800, 600)):
         super().__init__(path, font_size, screen_res)
         self.ASCII_CHARS = ' .",:;!~+-xmo*#W&8@'
         self.ASCII_COEFF = 255 // (len(self.ASCII_CHARS) - 1)
@@ -64,20 +64,18 @@ class ArtASCIIGray(ArtASCII):
                     self.surface.blit(self.RENDERED_ASCII_CHARS[char_index], (x, y))
 
 class ArtASCIIColor(ArtASCII):
-    def __init__(self, path='photo/nya.jpg', font_size=7, screen_res=(800, 600), color_lvl=8):
+    def __init__(self, path='photo/nya.jpg', font_size=10, screen_res=(800, 600), color_lvl=8):
         super().__init__(path, font_size, screen_res)
         self.COLOR_LVL = color_lvl
         self.ASCII_CHARS = ' ixzao*#MW&8%B@$'
-        self.ASCII_COEFF = 255 // (len(self.ASCII_CHARS)-1)
-        self.image, self.gray_image = self.get_image()
-        self.image = cv2.resize(self.image, self.screen_res, interpolation=cv2.INTER_AREA)
+        self.ASCII_COEFF = 255 // (len(self.ASCII_CHARS) - 1)
+        self.image = self.get_image()
+        self.image = cv2.resize(self.image, (self.WIDTH // self.CHAR_STEP, self.HEIGHT // self.CHAR_STEP), interpolation=cv2.INTER_AREA)
         self.PALETTE, self.COLOR_COEFF = self.create_palette()
 
     def get_image(self):
         self.cv2_image = cv2.imread(self.path)
-        image = cv2.cvtColor(self.cv2_image, cv2.COLOR_BGR2RGB)
-        gray_image = cv2.cvtColor(self.cv2_image, cv2.COLOR_BGR2GRAY)
-        return image, gray_image
+        return cv2.cvtColor(self.cv2_image, cv2.COLOR_BGR2RGB)
 
     def create_palette(self):
         colors, color_coeff = np.linspace(0, 255, num=self.COLOR_LVL, dtype=int, retstep=True)
@@ -93,12 +91,16 @@ class ArtASCIIColor(ArtASCII):
         return palette, color_coeff
 
     def draw_converted_image(self):
-        char_indices = self.gray_image // self.ASCII_COEFF
-        color_indices = self.image // self.COLOR_COEFF
+        char_indices = self.image.mean(axis=2) // self.ASCII_COEFF  # Индексация символов по яркости
+        color_indices = self.image // self.COLOR_COEFF  # Индексация цветов
         for x in range(0, self.WIDTH, self.CHAR_STEP):
             for y in range(0, self.HEIGHT, self.CHAR_STEP):
-                char_index = char_indices[y, x]
+                img_x = int(x / self.WIDTH * self.image.shape[1])
+                img_y = int(y / self.HEIGHT * self.image.shape[0])
+
+                char_index = int(char_indices[img_y, img_x])
                 if char_index:
                     char = self.ASCII_CHARS[char_index]
-                    color = tuple(color_indices[y, x])
-                    self.surface.blit(self.PALETTE[char][color], (x, y))
+                    color = tuple(color_indices[img_y, img_x])
+                    rendered_char = self.PALETTE[char][color]
+                    self.surface.blit(rendered_char, (x, y))
