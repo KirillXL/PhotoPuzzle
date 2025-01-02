@@ -46,6 +46,45 @@ class Interface:
     def select_event(self):
         raise NotImplementedError("Этот метод должен быть реализован в дочернем классе")
 
+class StartMenu(Interface):
+    def __init__(self,path = "photo",screen_res = (800,600)):
+        super().__init__(path,screen_res)
+
+    def select_event(self):
+        pg.display.set_caption("Start Menu")
+        # Кнопки
+
+        start_button = ['Start','Download Image','Exit']
+
+        running = True
+        select_button = None
+
+        while running:
+            self.surface.fill(self.WHITE)
+            # Отображение списка изображений
+            for i, name_button in enumerate(start_button):
+                rect = pg.Rect(50, 50 + i * 50, 700, 50)
+                pg.draw.rect(self.surface, self.GRAY, rect)
+                pg.draw.rect(self.surface, self.BLACK, rect, 2)
+                self.render_text(name_button, rect.centerx, rect.centery)
+
+            # Обработка событий
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    exit()
+                if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:  # ЛКМ
+                    mouse_x, mouse_y = event.pos
+                    for i, name_button in enumerate(start_button):
+                        rect = pg.Rect(50, 50 + i * 50, 700, 50)
+                        if rect.collidepoint(mouse_x, mouse_y):
+                            select_button = name_button
+                            running = False
+
+            pg.display.flip()
+            self.clock.tick(30)
+
+        return select_button
+
 
 
 class PickPicture(Interface):
