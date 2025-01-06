@@ -1,6 +1,6 @@
 from ascii import ArtASCIIGray, ArtASCIIColor
 from pixel import ArtPixelGray, ArtPixelColor
-from interface import StartMenu, PickPicture, PickArt
+from interface import StartMenu, PickPicture, PickArt, UploadImage
 
 
 if __name__ == '__main__':
@@ -34,6 +34,9 @@ if __name__ == '__main__':
                     case 'PIXEL Color':
                         app = ArtPixelColor(selected_path)
                         app.run()
+            case 'Upload Image':
+                download_image = UploadImage()
+                download_image.select_event()
             case 'Exit':
                 exit()
 

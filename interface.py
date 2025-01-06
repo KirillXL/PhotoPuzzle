@@ -1,5 +1,6 @@
 import pygame as pg
 import os
+from tkinter import Tk, filedialog
 
 
 
@@ -54,7 +55,7 @@ class StartMenu(Interface):
         pg.display.set_caption("Start Menu")
         # Кнопки
 
-        start_button = ['Start','Download Image','Exit']
+        start_button = ['Start','Upload Image','Exit']
 
         running = True
         select_button = None
@@ -176,3 +177,37 @@ class PickArt(Interface):
             self.clock.tick(30)
 
         return select_art
+
+class UploadImage(Interface):
+    def __init__(self, path="photo", screen_res=(800, 600)):
+        super().__init__(path, screen_res)
+
+    def open_file_explorer_and_copy(self):
+        """Open a file explorer to select an image and copy it to the photo folder."""
+        Tk().withdraw()  # Hide the root tkinter window
+        file_path = filedialog.askopenfilename(
+            title="Select an Image",
+            filetypes=[("Image Files", "*.png;*.jpg;*.jpeg")]
+        )
+
+        if file_path:
+            try:
+                if not os.path.exists(self.PATH):
+                    os.makedirs(self.PATH)
+
+                file_name = os.path.basename(file_path)
+                dest_path = os.path.join(self.PATH, file_name)
+
+                with open(file_path, 'rb') as src_file:
+                    with open(dest_path, 'wb') as dest_file:
+                        dest_file.write(src_file.read())
+
+                print(f"Image {file_name} copied to {self.PATH}")
+            except Exception as e:
+                print(f"Error copying file: {e}")
+
+    def select_event(self):
+        """Immediately open file explorer and exit."""
+        self.open_file_explorer_and_copy()
+
+
