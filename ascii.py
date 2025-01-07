@@ -16,7 +16,18 @@ class ArtASCII:
         self.CHAR_STEP = int(font_size * 0.6)
 
     def get_image(self):
-        raise NotImplementedError("This method should be implemented in the subclass.")
+        self.cv2_image = cv2.imread(self.path, cv2.IMREAD_UNCHANGED)  # Load with alpha channel if present
+        if self.cv2_image is None:
+            raise FileNotFoundError(f"Image at path {self.path} could not be loaded.")
+
+        if self.cv2_image.shape[-1] == 4:  # Check for alpha channel
+            # Convert BGRA (with alpha) to BGR
+            bgra_image = self.cv2_image
+            self.cv2_image = cv2.cvtColor(bgra_image, cv2.COLOR_BGRA2BGR)
+            print("Alpha channel detected and removed.")
+
+        # Convert to RGB for further processing
+        return cv2.cvtColor(self.cv2_image, cv2.COLOR_BGR2RGB)
 
     def draw_converted_image(self):
         raise NotImplementedError("This method should be implemented in the subclass.")
