@@ -3,6 +3,7 @@ from pixel import ArtPixelGray, ArtPixelColor
 from interface import StartMenu, PickPicture, PickArt, UploadImage
 
 
+
 if __name__ == '__main__':
 
     while True:

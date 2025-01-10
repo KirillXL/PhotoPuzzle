@@ -19,6 +19,8 @@ class Interface:
         self.BLACK = (0, 0, 0)
         self.GRAY = (200, 200, 200)
 
+        self.scroll_offset = 0
+
         # Шрифт
         self.font = pg.font.Font(None, 36)
 
@@ -108,6 +110,17 @@ class PickPicture(Interface):
             print(f"В папке {self.PATH} нет подходящих изображений!")
             return
 
+        #Размеры для слайдера
+        total_height = len(images) * 60
+        visible_ratio = min(1, self.HEIGHT / total_height)
+        slider_height = max(30, visible_ratio * self.HEIGHT)
+        slider_width = 20
+        slider_x = self.WIDTH - slider_width - 10
+        dragging_slider = False
+        start_drag_y = None
+
+
+
         running = True
         selected_image = None
 
@@ -116,10 +129,17 @@ class PickPicture(Interface):
 
             # Отображение списка изображений
             for i, img_path in enumerate(images):
-                rect = pg.Rect(50, 50 + i * 50, 700, 50)
-                pg.draw.rect(self.surface, self.GRAY, rect)
-                pg.draw.rect(self.surface, self.BLACK, rect, 2)
-                self.render_text(os.path.basename(img_path), rect.centerx, rect.centery)
+                y = 50 + i * 60 - self.scroll_offset
+                if -50 < y < self.HEIGHT:
+                    rect = pg.Rect(50, y, 700, 50)
+                    pg.draw.rect(self.surface, self.GRAY, rect)
+                    pg.draw.rect(self.surface, self.BLACK, rect, 2)
+                    self.render_text(os.path.basename(img_path), rect.centerx, rect.centery)
+
+            # Отрисовка слайдера
+            slider_y = (self.scroll_offset / total_height) * self.HEIGHT
+            slider_rect = pg.Rect(slider_x, slider_y, slider_width, slider_height)
+            pg.draw.rect(self.surface, self.GRAY, slider_rect)
 
             # Обработка событий
             for event in pg.event.get():
@@ -132,6 +152,23 @@ class PickPicture(Interface):
                         if rect.collidepoint(mouse_x, mouse_y):
                             selected_image = img_path
                             running = False
+                if event.type == pg.MOUSEBUTTONDOWN:
+                    if slider_rect.collidepoint(event.pos):
+                        dragging_slider = True
+                        start_drag_y = event.pos[1]
+                elif event.type == pg.MOUSEBUTTONUP:
+                    dragging_slider = False
+                if event.type == pg.MOUSEMOTION:
+                    if dragging_slider:
+                        delta_y = event.pos[1] - start_drag_y
+                        self.scroll_offset += (delta_y / self.HEIGHT) * total_height
+                        self.scroll_offset = max(0, min(self.scroll_offset, total_height - self.HEIGHT))
+                        start_drag_y = event.pos[1]
+
+                elif event.type == pg.MOUSEWHEEL:
+                    self.scroll_offset -= event.y * 30  # Adjust scroll speed
+                    self.scroll_offset = max(0, min(self.scroll_offset, total_height - self.HEIGHT))
+
             pg.display.flip()
             self.clock.tick(30)
 
